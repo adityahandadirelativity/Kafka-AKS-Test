@@ -6,8 +6,8 @@ var kafka = require('kafka-node');
 // Kafka topic and options for the consumer
 // replace with the topic and the private IP of
 // one of your Kafka broker hosts
-var topic = 'mytopic';
-var brokerHost = '20.0.0.13:9092';
+var topic = 'test';
+var brokerHost = '10.1.0.20:9092';
 // consumerOpts used by consumer
 var consumerOpts = {
     kafkaHost: brokerHost,

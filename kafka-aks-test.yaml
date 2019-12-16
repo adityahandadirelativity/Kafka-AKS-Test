@@ -2,6 +2,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: kafka-aks-test
+  namespace: r1-stampede
 spec:
   replicas: 1
   strategy:
@@ -11,12 +12,25 @@ spec:
   minReadySeconds: 5
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
       labels:
         app: kafka-aks-test
     spec:
+      imagePullSecrets:
+        - name: acr-auth
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: beta.kubernetes.io/os
+                    operator: In
+                    values:
+                      - linux
       containers:
         - name: kafka-aks-test
-          image: microsoft/kafka-aks-test:v1
+          image: r1k8sacrdev.azurecr.io/kafka-aks-test:v9
           ports:
             - containerPort: 80
           resources:
@@ -29,6 +43,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kafka-aks-test
+  namespace: r1-stampede
 spec:
   type: LoadBalancer
   ports:
